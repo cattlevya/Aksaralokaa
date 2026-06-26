@@ -1,52 +1,83 @@
-# AksaraLoka - Marketplace Produk UMKM Banyumas
+# AksaraLoka - Platform E-Commerce Multi-Vendor
 
-AksaraLoka adalah platform e-commerce multi-vendor (marketplace) inovatif yang dirancang khusus untuk mewadahi Usaha Mikro, Kecil, dan Menengah (UMKM) unggulan dari Kabupaten Banyumas. Proyek ini dikembangkan sebagai karya tugas/ujian akhir untuk **CPMK-02 PAKET 2**.
+AksaraLoka merupakan sebuah sistem informasi berbasis *web* yang mengimplementasikan model *e-commerce multi-vendor* (marketplace). Perangkat lunak ini dirancang untuk memfasilitasi aktivitas perdagangan secara digital dengan mengintegrasikan proses jual beli dari berbagai penjual independen ke dalam satu *platform* yang terpusat. 
 
-Platform ini memfasilitasi transaksi aman, manajemen stok asimetris (pessimistic locking), serta pelaporan komprehensif bagi pembeli, pelaku UMKM (penjual), dan administrator platform.
+Aplikasi ini dikembangkan untuk mengotomatisasi alur transaksi, mulai dari pemilihan barang melalui sistem keranjang belanja (*shopping cart*), proses konfirmasi pemesanan (*checkout*), hingga penyediaan manajemen toko yang terstruktur bagi para pelaku UMKM.
+
+**🌐 Live Deployment:** [http://kelas-c-2.informatika-unjedir.web.id](http://kelas-c-2.informatika-unjedir.web.id)
 
 <div align="center">
-  <h3><a href="https://youtube.com/watch?v=placeholder_link">📹 Tonton Video Demo YouTube Disini</a></h3>
+  <h3>👥 Anggota Kelompok:</h3>
+  <p><strong>Ali Muhammad Firdaus</strong> - H1D024102</p>
+  <p><strong>Aditya Alfandy</strong> - H1D024103</p>
+  <p><strong>Yakfi 'Arofah Yuhdika Muftiady</strong> - H1D024114</p>
+  <p><strong>Farrel Wildan Widodo</strong> - H1D024045</p>
 </div>
 
 ---
 
-## 🏗 Tech Stack
+## 🏗 Tech Stack & Deployment
 
 Proyek ini menggunakan spesifikasi modern dengan fondasi:
-* **Framework:** Laravel 13
-* **Bahasa Pemrograman:** PHP 8.3
-* **Database:** MySQL / MariaDB (Laravel Herd Environment)
-* **Frontend:** Blade Templating Engine + Vanilla JS (Sesuai spesifikasi, Non-SPA)
-* **Styling:** Tailwind CSS 3 (Implementasi *Stitch/Lumiere Design System* kustom)
+* **Bahasa Pemrograman:** PHP 8.3+, ES6+
+* **Framework Backend:** Laravel 13.x
+* **Frontend:** Tailwind CSS 3.1.x & Alpine.js 3.4.x (Blade Templating Engine)
 * **Autentikasi:** Laravel Breeze
-* **Ekspor Laporan:** Barryvdh/laravel-dompdf
+* **Ekspor Laporan:** Barryvdh/laravel-dompdf (PDF Export)
+* **Database:** MySQL
+* **Deployment / Hosting:** Virtual Private Server (VPS) dengan HestiaCP (Nginx/Apache)
 
 ---
 
-## Fitur Utama & Penyelesaian Tantangan Unik (CPMK-02)
+## 🚀 Fitur Utama
 
-1. **Multi-Role Otorisasi:** Akses panel tersendiri dengan middleware ketat untuk 3 level pengguna (`Admin`, `Penjual`, `Pembeli`).
-2. **Persistent Shopping Cart (Tantangan 1):** Mekanisme keranjang belanja non-database menggunakan sistem `Session`. Data produk keranjang tersimpan stabil meskipun berpindah rute tanpa harus login terlebih dahulu.
-3. **Atomic Checkout Transaction (Tantangan 2):** Transaksi checkout dibungkus menyeluruh di dalam `DB::transaction()`. Jika ada kegagalan internal, data `order` dan `order_items` yang terhubung tidak akan tercipta sama sekali (Rollback).
-4. **Pessimistic Locking / Race Condition (Tantangan 3):** Memastikan stok absolut akurat dengan klausa `lockForUpdate()` pada saat query Eloquent selama proses decrement inventaris.
-5. **Split Order Multi-Penjual (Tantangan 4):** Pembeli dapat melakukan *checkout* berbagai barang dari toko berbeda sekaligus. Sistem merombak dan menciptakan faktur tagihan spesifik (`order_code`) per-masing-masing toko agar mempermudah notifikasi penjual.
-6. **Multi-Image Upload (Tantangan 5):** Mendukung unggahan lebih dari 3 foto dengan sistem tabel relasional One-to-Many (`product_images`) sehingga menunjang fitur Galeri Produk Interaktif.
-7. **State Machine Pesanan (Tantangan 6):** Sistem transisi status (`menunggu konfirmasi` -> `diproses` -> `dikirim` -> `selesai`) mengadopsi validasi *lifecycle* ketat pada model dan controller; memblokir lompatan loncat status yang rentan *fraud*.
-8. **Export PDF Executive Report:** Masing-masing penjual dan Admin Global dapat membuat Laporan GMV format PDF dari ringkasan order multi-toko.
+1. **Katalog & Detail Produk:** Antarmuka utama untuk mengeksplorasi daftar produk lengkap dengan detail dan harga.
+2. **Keranjang Belanja (Shopping Cart):** Sistem keranjang sementara (*session-based*) untuk menampung pesanan sebelum *checkout*.
+3. **Proses Checkout & Split Order:** Alur utama untuk pemesanan barang, dilengkapi fitur memecah tagihan otomatis (Split Order) jika membeli barang dari banyak toko.
+4. **Dasbor Penjual (Seller Dashboard):** Panel khusus bagi mitra penjual untuk melihat ringkasan performa toko harian/bulanan.
+5. **Manajemen Produk Toko (CRUD):** Fasilitas bagi penjual untuk menambah, mengubah, dan menghapus etalase produk mereka.
+6. **Manajemen Pesanan (Order Tracking):** Fitur untuk memperbarui dan memantau status pesanan (menunggu, diproses, dikirim, selesai).
+7. **Ekspor Laporan Penjualan (PDF):** Kemampuan untuk mencetak dan mengunduh riwayat rekapitulasi data pendapatan toko ke format PDF.
+8. **Dasbor Administrator (Admin Panel):** Pusat kendali super admin untuk memonitor lalu lintas transaksi, mengelola kategori, dan hak akses pengguna.
 
 ---
 
-## Petunjuk Instalasi Step-by-Step
+## 🗄️ Struktur Database (Tabel Utama)
 
-Agar aplikasi berjalan sempurna pada lingkungan lokal Anda, ikuti langkah-langkah instalasi berikut:
+Aplikasi ini menggunakan basis data relasional (MySQL) dengan tabel-tabel inti sebagai berikut:
+- `users` : Menyimpan data autentikasi dan status hak akses (role: admin, penjual, pembeli).
+- `stores` : Menyimpan profil UMKM/toko yang dimiliki oleh pengguna penjual.
+- `categories` : Menyimpan master data klasifikasi kategori produk.
+- `products` : Menyimpan informasi detail barang dagangan yang terikat pada suatu toko.
+- `product_images` : Menyimpan kumpulan galeri foto untuk masing-masing produk (*One-to-Many*).
+- `orders` : Menyimpan rekaman transaksi utama (faktur tagihan dan status pesanan).
+- `order_items` : Menyimpan rincian spesifik barang (kuantitas dan harga satuan) di dalam pesanan.
+- `wishlists` : Menyimpan data produk favorit yang ditandai oleh pembeli.
+
+---
+
+## 📋 Persyaratan Sistem (Prerequisites)
+
+Sebelum melakukan instalasi, pastikan komputer Anda telah terinstal perangkat lunak berikut:
+- **PHP** (versi 8.3 atau lebih baru)
+- **Composer** (untuk manajemen dependensi PHP)
+- **Node.js & NPM** (untuk *build* aset *frontend* Tailwind & Vite)
+- **MySQL Server** (bisa menggunakan XAMPP, Laragon, atau Laravel Herd)
+- **Git** (untuk *clone* repositori)
+
+---
+
+## ⚙️ Petunjuk Instalasi Step-by-Step
+
+Agar aplikasi berjalan pada lingkungan lokal Anda, ikuti langkah-langkah berikut:
 
 1. **Clone repositori dari GitHub:**
    ```bash
-   git clone https://github.com/username/aksaraloka-cpmk02.git
-   cd aksaraloka-cpmk02
+   git clone https://github.com/cattlevya/Aksaralokaa.git
+   cd Aksaralokaa
    ```
 
-2. **Instal seluruh *dependencies* Composer dan NPM:**
+2. **Instal seluruh dependencies Composer dan NPM:**
    ```bash
    composer install
    npm install && npm run build
@@ -57,15 +88,7 @@ Agar aplikasi berjalan sempurna pada lingkungan lokal Anda, ikuti langkah-langka
    ```bash
    cp .env.example .env
    ```
-   Lalu buka file `.env`, atur koneksi spesifikasi *database* Anda:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=aksaraloka_db
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
+   Lalu buka file `.env`, atur koneksi spesifikasi *database* Anda sesuai environment lokal.
 
 4. **Buat Application Key:**
    ```bash
@@ -78,7 +101,7 @@ Agar aplikasi berjalan sempurna pada lingkungan lokal Anda, ikuti langkah-langka
    ```
 
 6. **Migrasi Database sekaligus Populasikan (Seed) Master Data:**
-   Langkah ini wajib untuk melengkapi katalog dan struktur role akun.
+   Langkah ini wajib untuk melengkapi katalog dan struktur role akun awal. *(Pastikan aplikasi MySQL server seperti XAMPP atau Laravel Herd Anda sudah berjalan).*
    ```bash
    php artisan migrate:fresh --seed
    ```
@@ -87,21 +110,23 @@ Agar aplikasi berjalan sempurna pada lingkungan lokal Anda, ikuti langkah-langka
    ```bash
    php artisan serve
    ```
-   Akses `http://localhost:8000` atau URL Laravel Herd lokal Anda.
+   Buka terminal baru dan jalankan Vite untuk aset Frontend:
+   ```bash
+   npm run dev
+   ```
+   Akses `http://localhost:8000` melalui browser Anda.
 
 ---
 
-## Kredensial Pengujian (Seeder Default)
+## 🔑 Kredensial Pengujian (Seeder Default)
 
-Proses _seeding_ secara otomatis akan menciptakan 4 pengguna dan data tiruan siap pakai:
+Proses *seeding* secara otomatis akan menciptakan data dummy dan 4 akun siap pakai dengan *password* default `password`:
 
-| Role | Nama | Email Login | Password |
+| Role | Nama / Instansi | Email Login | Password |
 | :--- | :--- | :--- | :--- |
 | **Admin** | Admin AksaraLoka | `admin@aksaraloka.id` | `password` |
 | **Penjual (Toko 1)** | Siti Rahayu | `siti@aksaraloka.id` | `password` |
 | **Penjual (Toko 2)** | Bambang Wijaya | `bambang@aksaraloka.id` | `password` |
 | **Pembeli** | Rina Susanti | `rina@email.com` | `password` |
 
-Gunakan akses tersebut di `/login` untuk mengulas masing-masing _Dashboard_ dan alurnya secara utuh.
-
----
+Gunakan akses tersebut di `/login` untuk mencoba masing-masing fitur dasbor sesuai *role*.
