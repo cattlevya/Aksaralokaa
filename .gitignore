@@ -23,3 +23,17 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Temporary Files
+cookie_*.txt
+
+# Project Guides
+Orang*.md
+
+# Laravel Temp Directories
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
